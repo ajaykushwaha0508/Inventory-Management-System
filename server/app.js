@@ -2,6 +2,8 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import authRouter from "./routes/auth.routes.js";
+import categoriesRouter from "./routes/category.routes.js";
+import { authenticate } from "./middleware/auth.middleware.js";
 
 const app = express();
 
@@ -23,5 +25,9 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/auth", authRouter);
+
+app.use(authenticate);
+
+app.use("/api/categories", categoriesRouter);
 
 export default app;
