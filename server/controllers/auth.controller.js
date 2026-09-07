@@ -1,16 +1,25 @@
 import {
   registerSchema,
   loginSchema,
+  memberLoginSchema,
 } from "../validatorsSchema/auth.validator.js";
 
-import { registerUser, loginUser } from "../services/auth.service.js";
+import {
+  registerUser,
+  loginOwner,
+  loginMember,
+} from "../services/auth.service.js";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: true,
+  secure: process.env.NODE_ENV === "production",
   sameSite: "lax",
   maxAge: 24 * 60 * 60 * 1000,
 };
+
+// ========================================
+// Owner Registration
+// ========================================
 
 export const register = async (req, res) => {
   try {
@@ -24,21 +33,25 @@ export const register = async (req, res) => {
       });
     }
 
-    const { name, email, password } = result.data;
+    const { name, email, password, organizationName, organizationCode } =
+      result.data;
 
-    const user = await registerUser({
+    const resultData = await registerUser({
       name,
       email,
       password,
+      organizationName,
+      organizationCode,
     });
 
-    res.cookie("token", user.token, cookieOptions);
+    res.cookie("token", resultData.token, cookieOptions);
 
     return res.status(201).json({
       success: true,
-      message: "User registered successfully",
+      message: "Owner registered successfully",
       data: {
-        user,
+        user: resultData.user,
+        organization: resultData.organization,
       },
     });
   } catch (error) {
@@ -48,6 +61,10 @@ export const register = async (req, res) => {
     });
   }
 };
+
+// ========================================
+// Owner Login
+// ========================================
 
 export const login = async (req, res) => {
   try {
@@ -63,18 +80,18 @@ export const login = async (req, res) => {
 
     const { email, password } = result.data;
 
-    const user = await loginUser({
+    const resultData = await loginOwner({
       email,
       password,
     });
 
-    res.cookie("token", user.token, cookieOptions);
+    res.cookie("token", resultData.token, cookieOptions);
 
     return res.status(200).json({
       success: true,
-      message: "Login successful",
+      message: "Owner login successful",
       data: {
-        user: user.user,
+        user: resultData.user,
       },
     });
   } catch (error) {
@@ -84,6 +101,51 @@ export const login = async (req, res) => {
     });
   }
 };
+
+// ========================================
+// Organization Member Login
+// ========================================
+
+export const memberLogin = async (req, res) => {
+  try {
+    const result = memberLoginSchema.safeParse(req.body);
+
+    if (!result.success) {
+      return res.status(400).json({
+        success: false,
+        message: "Validation failed",
+        errors: result.error.issues,
+      });
+    }
+
+    const { organizationCode, loginId, password } = result.data;
+
+    const resultData = await loginMember({
+      organizationCode,
+      loginId,
+      password,
+    });
+
+    res.cookie("token", resultData.token, cookieOptions);
+
+    return res.status(200).json({
+      success: true,
+      message: "Member login successful",
+      data: {
+        member: resultData.member,
+      },
+    });
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+// ========================================
+// Logout
+// ========================================
 
 export const logout = (req, res) => {
   res.clearCookie("token", cookieOptions);
