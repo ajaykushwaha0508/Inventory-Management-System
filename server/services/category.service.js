@@ -7,6 +7,8 @@ import {
   deleteCategory,
 } from "../repositories/category.repository.js";
 
+import Product from "../models/product.model.js";
+
 export const createCategoryService = async ({ name, description }) => {
   const normalizedName = name.trim().toLowerCase();
 
@@ -63,6 +65,16 @@ export const deleteCategoryService = async (categoryId) => {
 
   if (!category) {
     throw new Error("Category not found");
+  }
+
+  const productExists = await Product.exists({
+    category: categoryId,
+  });
+
+  if (productExists) {
+    throw new Error(
+      "Cannot delete category because products are assigned to it",
+    );
   }
 
   await deleteCategory(categoryId);
