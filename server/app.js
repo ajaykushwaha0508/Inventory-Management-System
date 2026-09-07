@@ -1,6 +1,7 @@
 import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import authRouter from "./routes/auth.routes.js";
 
 const app = express();
 
@@ -20,5 +21,7 @@ app.get("/api/health", (req, res) => {
     message: "API is running",
   });
 });
+
+app.use("/api/auth", authRouter);
 
 export default app;
