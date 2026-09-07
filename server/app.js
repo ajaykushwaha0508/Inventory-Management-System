@@ -5,6 +5,7 @@ import authRouter from "./routes/auth.routes.js";
 import categoriesRouter from "./routes/category.routes.js";
 import { authenticate } from "./middleware/auth.middleware.js";
 import productRoutes from "./routes/product.routes.js";
+import inventoryRoutes from "./routes/inventory.routes.js";
 
 const app = express();
 
@@ -31,5 +32,6 @@ app.use(authenticate);
 
 app.use("/api/categories", categoriesRouter);
 app.use("/api/products", productRoutes);
+app.use("/api/products/inventory", inventoryRoutes);
 
 export default app;
