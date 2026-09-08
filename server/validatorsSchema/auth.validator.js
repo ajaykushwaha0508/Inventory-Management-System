@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 // Owner Registration
+
 export const registerSchema = z.object({
   name: z
     .string()
@@ -20,6 +21,13 @@ export const registerSchema = z.object({
     .trim()
     .min(2, "Organization name must be at least 2 characters")
     .max(100, "Organization name cannot exceed 100 characters"),
+
+  organizationCode: z
+    .string()
+    .trim()
+    .min(3, "Organization code must be at least 3 characters")
+    .max(20, "Organization code cannot exceed 20 characters")
+    .transform((value) => value.toUpperCase()),
 });
 
 // Owner Login

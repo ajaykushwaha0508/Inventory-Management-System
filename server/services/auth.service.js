@@ -20,6 +20,7 @@ export const registerUser = async ({
   email,
   password,
   organizationName,
+  organizationCode,
 }) => {
   const normalizedEmail = email.toLowerCase().trim();
 
@@ -40,6 +41,7 @@ export const registerUser = async ({
   const organization = await createOrganization({
     name: organizationName.trim(),
     createdBy: user._id,
+    code: organizationCode,
   });
 
   return {
