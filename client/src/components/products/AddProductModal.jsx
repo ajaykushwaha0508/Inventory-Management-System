@@ -19,16 +19,11 @@ export default function AddProductModal({
 }) {
   const [form, setForm] = useState(initialForm);
 
-  // Hooks must run unconditionally, on every render — they can't sit after
-  // an early `if (!open) return null`. Moved above the early return, and
-  // guarded against an empty/loading `categories` array so it doesn't
-  // crash on `categories[0]._id`.
   useEffect(() => {
     if (!categories.length) return;
     setForm((prev) => ({
       ...prev,
-      // Only default the category if one isn't already chosen, so this
-      // doesn't clobber the user's selection if `categories` re-renders.
+
       category: prev.category || categories[0]._id,
     }));
   }, [categories]);
@@ -38,8 +33,7 @@ export default function AddProductModal({
   const update = (field) => (e) =>
     setForm((prev) => ({
       ...prev,
-      // Keep quantity/price as raw strings while typing (so the field can
-      // be cleared) — convert to numbers on submit instead.
+
       [field]: e.target.value,
     }));
 

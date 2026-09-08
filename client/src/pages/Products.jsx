@@ -17,6 +17,7 @@ import {
 } from "../services/product.service.js";
 
 import { useSnackbar } from "notistack";
+import ProductViewModal from "../components/products/ProductViewModal.jsx";
 
 const statusForTab = {
   "in-stock": "IN_STOCK",
@@ -58,6 +59,7 @@ export default function ProductsPage() {
   const [query, setQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState([]);
   const [page, setPage] = useState(1);
+  const [viewProduct, setViewProduct] = useState(null);
 
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -253,6 +255,14 @@ export default function ProductsPage() {
     setSelectedIds([]);
   };
 
+  const handleViewProduct = (product) => {
+    setViewProduct(product);
+  };
+
+  const handleCloseView = () => {
+    setViewProduct(null);
+  };
+
   return (
     <div className="min-h-screen bg-slate-50 pb-10">
       <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-6 lg:px-8">
@@ -298,6 +308,7 @@ export default function ProductsPage() {
               onToggleAll={toggleAll}
               onEdit={handleOpenUpdateProduct}
               isLoading={isLoading}
+              onView={handleViewProduct}
             />
           </div>
 
@@ -329,6 +340,8 @@ export default function ProductsPage() {
             categories={categories}
             onSubmit={handleUpdateProduct}
           />
+
+          <ProductViewModal product={viewProduct} onClose={handleCloseView} />
         </div>
       </div>
     </div>

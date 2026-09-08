@@ -8,6 +8,7 @@ export default function ProductTable({
   onToggleRow,
   onToggleAll,
   onEdit,
+  onView,
 }) {
   const allSelected =
     products.length > 0 && products.every((p) => selectedIds.includes(p._id));
@@ -27,21 +28,13 @@ export default function ProductTable({
             </th>
 
             <th className="py-3 pr-3 font-medium">Product Name</th>
-
             <th className="py-3 pr-3 font-medium">SKU Code</th>
-
             <th className="py-3 pr-3 font-medium">Category</th>
-
             <th className="py-3 pr-3 font-medium">Quantity &amp; Level</th>
-
             <th className="py-3 pr-3 font-medium">Unit Price</th>
-
             <th className="py-3 pr-3 font-medium">Supplier</th>
-
             <th className="py-3 pr-3 font-medium">Status</th>
-
             <th className="py-3 pr-3 font-medium">Last Updated</th>
-
             <th className="py-3 pr-4 text-right font-medium">Actions</th>
           </tr>
         </thead>
@@ -113,6 +106,7 @@ export default function ProductTable({
                     {/* View */}
                     <button
                       type="button"
+                      onClick={() => onView(product)}
                       className="rounded p-1 hover:bg-slate-100 hover:text-brand-600"
                       aria-label={`View ${product.name}`}
                     >
