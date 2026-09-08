@@ -4,6 +4,8 @@ import LoginPage from "../pages/login/Login.jsx";
 import Dashboard from "../pages/Dashboard.jsx";
 import DashboardLayout from "../layouts/DashboardLayout.jsx";
 import PlaceholderPage from "../pages/PlaceholderPage.jsx";
+import Categories from "../pages/Categories.jsx";
+import ProductsPage from "../pages/Products.jsx";
 
 export const routes = createBrowserRouter([
   {
@@ -19,8 +21,8 @@ export const routes = createBrowserRouter([
     element: <DashboardLayout />,
     children: [
       { index: true, element: <Dashboard /> }, // "/"
-      { path: "products", element: <PlaceholderPage title="Products" /> },
-      { path: "categories", element: <PlaceholderPage title="Categories" /> },
+      { path: "products", element: <ProductsPage /> },
+      { path: "categories", element: <Categories /> },
       {
         path: "stock-adjustments",
         element: <PlaceholderPage title="Stock Adjustments" />,

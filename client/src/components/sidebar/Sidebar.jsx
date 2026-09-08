@@ -1,12 +1,9 @@
 import { NavLink } from "react-router-dom";
 import {
   Boxes,
-  ScanLine,
   LayoutGrid,
   Package,
   Tags,
-  SlidersHorizontal,
-  BarChart3,
   Settings,
   History,
   LogOut,
@@ -16,12 +13,6 @@ const navItems = [
   { label: "Dashboard", to: "/", icon: LayoutGrid },
   { label: "Products", to: "/products", icon: Package },
   { label: "Categories", to: "/categories", icon: Tags },
-  {
-    label: "Stock Adjustments",
-    to: "/stock-adjustments",
-    icon: SlidersHorizontal,
-  },
-  { label: "Reports", to: "/reports", icon: BarChart3 },
   { label: "Settings", to: "/settings", icon: Settings },
 ];
 

@@ -1,14 +1,6 @@
-import { NavLink } from "react-router-dom";
-import {
-  Search,
-  Warehouse,
-  ChevronDown,
-  Bell,
-  HelpCircle,
-  Plus,
-} from "lucide-react";
+import { Search, Plus } from "lucide-react";
 
-export default function Topbar({ onAddProduct, hasNotifications = true }) {
+export default function Topbar({ onAddProduct }) {
   return (
     <header className="sticky top-0 z-20 bg-white border-b border-slate-200">
       <div className="flex items-center gap-4 px-6 py-3">

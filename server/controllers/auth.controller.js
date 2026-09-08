@@ -62,10 +62,6 @@ export const register = async (req, res) => {
   }
 };
 
-// ========================================
-// Owner Login
-// ========================================
-
 export const login = async (req, res) => {
   try {
     const result = loginSchema.safeParse(req.body);

@@ -67,7 +67,7 @@ export const loginOwner = async ({ email, password }) => {
 
   const token = generateToken({
     userId: user._id.toString(),
-    accountType: "OWNER",
+    role: "ADMIN",
   });
 
   return {

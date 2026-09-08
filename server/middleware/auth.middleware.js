@@ -13,7 +13,7 @@ export const authenticate = (req, res, next) => {
     }
 
     const decoded = verifyToken(token);
-
+    console.log({ decoded });
     if (!decoded) {
       return res.status(401).json({
         success: false,
@@ -22,7 +22,7 @@ export const authenticate = (req, res, next) => {
     }
 
     req.user = decoded;
-
+    console.log("user", req.user);
     next();
   } catch (error) {
     return res.status(401).json({
