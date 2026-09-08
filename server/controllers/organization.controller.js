@@ -9,6 +9,7 @@ import {
   updateOrganizationService,
   deleteOrganizationService,
   getOrganizationMembersService,
+  getMyOrganizationsService,
 } from "../services/organization.service.js";
 
 export const createOrganization = async (req, res) => {

@@ -5,6 +5,7 @@ import {
   login,
   memberLogin,
   logout,
+  getMe,
 } from "../controllers/auth.controller.js";
 
 const router = express.Router();

@@ -23,7 +23,10 @@ export const createProduct = async (req, res) => {
       });
     }
 
-    const product = await createProductService(result.data);
+    const product = await createProductService({
+      ...result.data,
+      createdBy: req.user.userId,
+    });
 
     return res.status(201).json({
       success: true,
@@ -53,6 +56,7 @@ export const getProducts = async (req, res) => {
     } = req.query;
 
     const result = await getProductsService({
+      userId: req.user.userId,
       search,
       category,
       status,

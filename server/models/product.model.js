@@ -59,16 +59,19 @@ const productSchema = new mongoose.Schema(
       enum: ["IN_STOCK", "LOW_STOCK", "OUT_OF_STOCK"],
       default: "OUT_OF_STOCK",
     },
+
+    createdBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Created by user is required"],
+    },
   },
   {
     timestamps: true,
   },
 );
 
-// Indexes
-productSchema.index({ name: 1 });
-productSchema.index({ category: 1 });
-productSchema.index({ status: 1 });
+productSchema.index({ createdBy: 1, sku: 1 });
 
 const Product = mongoose.model("Product", productSchema);
 

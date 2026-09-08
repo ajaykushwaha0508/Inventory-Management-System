@@ -15,6 +15,9 @@ import { findMemberByLoginIdAndOrganization } from "../repositories/member.repos
 
 import { generateToken } from "../utils/jwt.js";
 
+import OrganizationMember from "../models/organizationMember.model.js";
+import User from "../models/user.model.js";
+
 export const registerUser = async ({
   name,
   email,
@@ -135,4 +138,46 @@ export const getCurrentUser = async (userId) => {
   }
 
   return user;
+};
+
+export const getMeService = async (authUser) => {
+  console.log(authUser);
+  if (authUser.role === "ADMIN") {
+    const user = await User.findById(authUser.userId).select("-password");
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    return {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: "OWNER",
+      accountType: "OWNER",
+      organizationId: authUser.organizationId,
+    };
+  }
+
+  if (authUser.accountType !== "ADMIN") {
+    const member = await OrganizationMember.findById(authUser.memberId).select(
+      "-password",
+    );
+
+    if (!member) {
+      throw new Error("Member not found");
+    }
+
+    return {
+      id: member._id,
+      name: member.name,
+      loginId: member.loginId,
+      email: member.email,
+      role: member.role,
+      accountType: "MEMBER",
+      organizationId: member.organization,
+    };
+  }
+
+  throw new Error("Invalid account type");
 };

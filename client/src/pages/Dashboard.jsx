@@ -1,13 +1,9 @@
 import Topbar from "../components/topbar/Topbar";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import StatsGrid from "../components/dashboard/StatsGrid";
-import InventoryVelocityChart from "../components/dashboard/InventoryVelocityChart";
-import RecentMovements from "../components/dashboard/RecentMovements";
+
 import CriticalStockTable from "../components/dashboard/CriticalStockTable";
 
-// This is the single "common dashboard" file — it combines the Topbar
-// and every dashboard widget together. DashboardLayout only renders the
-// Sidebar; this file provides everything else for the Dashboard route.
 export default function Dashboard() {
   return (
     <>
@@ -20,11 +16,6 @@ export default function Dashboard() {
         />
 
         <StatsGrid />
-
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_380px] gap-6 mt-6">
-          <InventoryVelocityChart />
-          <RecentMovements onViewAll={() => console.log("view all movements")} />
-        </div>
 
         <div className="mt-6">
           <CriticalStockTable

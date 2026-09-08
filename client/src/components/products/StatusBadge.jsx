@@ -10,13 +10,19 @@ const dotStyles = {
   OUT_OF_STOCK: "bg-red-500",
 };
 
+const statusMap = {
+  IN_STOCK: "In Stock",
+  LOW_STOCK: "Low Stock",
+  OUT_OF_STOCK: "Out of Stock",
+};
+
 export default function StatusBadge({ status }) {
   return (
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${styles[status]}`}
     >
       <span className={`h-1.5 w-1.5 rounded-full ${dotStyles[status]}`} />
-      {status}
+      {statusMap[status]}
     </span>
   );
 }

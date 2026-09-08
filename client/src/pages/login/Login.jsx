@@ -81,7 +81,7 @@ export default function LoginPage() {
         });
       }
 
-      //   navigate("/dashboard");
+      navigate("/");
     } catch (error) {
       const message =
         error.response?.data?.message || "Unable to login. Please try again.";

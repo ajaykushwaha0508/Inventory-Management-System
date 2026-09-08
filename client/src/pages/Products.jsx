@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+
 import Header from "../components/products/Header.jsx";
 import StatsCards from "../components/products/StatsCards.jsx";
 import FilterTabs from "../components/products/FilterTabs.jsx";
@@ -6,9 +7,16 @@ import Toolbar from "../components/products/Toolbar.jsx";
 import ProductTable from "../components/products/ProductTable.jsx";
 import Pagination from "../components/products/Pagination.jsx";
 import AddProductModal from "../components/products/AddProductModal.jsx";
+import UpdateProductModal from "../components/products/UpdateProductModal.jsx";
+
 import { fetchCategories } from "../services/category.service.js";
+import {
+  createProduct,
+  fetchProducts,
+  updateProduct,
+} from "../services/product.service.js";
+
 import { useSnackbar } from "notistack";
-import { createProduct, fetchProducts } from "../services/product.service.js";
 
 const statusForTab = {
   "in-stock": "IN_STOCK",
@@ -50,7 +58,12 @@ export default function ProductsPage() {
   const [query, setQuery] = useState("");
   const [selectedIds, setSelectedIds] = useState([]);
   const [page, setPage] = useState(1);
+
   const [modalOpen, setModalOpen] = useState(false);
+
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -61,12 +74,16 @@ export default function ProductsPage() {
   const loadProducts = async () => {
     try {
       setIsLoading(true);
+
       const response = await fetchProducts();
+
       setProducts(response.data?.products || []);
     } catch (error) {
       enqueueSnackbar(
         error.response?.data?.message || "Failed to load products.",
-        { variant: "error" },
+        {
+          variant: "error",
+        },
       );
     } finally {
       setIsLoading(false);
@@ -85,11 +102,14 @@ export default function ProductsPage() {
         ]);
 
         setProducts(productsResponse.data?.products || []);
+
         setCategories(categoriesResponse.data?.categories || []);
       } catch (error) {
         enqueueSnackbar(
           error.response?.data?.message || "Failed to load inventory data.",
-          { variant: "error" },
+          {
+            variant: "error",
+          },
         );
       } finally {
         setIsLoading(false);
@@ -102,8 +122,11 @@ export default function ProductsPage() {
   const tabCounts = useMemo(
     () => ({
       all: products.length,
+
       "in-stock": products.filter((p) => p.status === "IN_STOCK").length,
+
       "low-stock": products.filter((p) => p.status === "LOW_STOCK").length,
+
       "out-of-stock": products.filter((p) => p.status === "OUT_OF_STOCK")
         .length,
     }),
@@ -128,21 +151,17 @@ export default function ProductsPage() {
     });
   }, [products, activeTab, query]);
 
-  // Total pages must be based on the FILTERED count, and re-clamp `page`
-  // whenever filtering shrinks the result set below the current page
-  // (e.g. searching while on page 4 of 5 might leave only 1 page of results).
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
 
   useEffect(() => {
-    if (page > totalPages) setPage(totalPages);
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
   }, [totalPages, page]);
 
-  // Previously `filtered` (the FULL filtered list) was passed straight into
-  // <ProductTable>, ignoring `page` entirely — so pagination controls
-  // existed but never actually changed what was rendered. This slices out
-  // just the current page's slice of results.
   const paginated = useMemo(() => {
     const start = (page - 1) * PAGE_SIZE;
+
     return filtered.slice(start, start + PAGE_SIZE);
   }, [filtered, page]);
 
@@ -155,7 +174,7 @@ export default function ProductsPage() {
     );
   };
 
-  // Select / deselect all (only the rows visible on the current page)
+  // Select / deselect all visible rows
   const toggleAll = (checked) => {
     setSelectedIds(checked ? paginated.map((product) => product._id) : []);
   };
@@ -175,22 +194,64 @@ export default function ProductsPage() {
       });
 
       await loadProducts();
+
       setModalOpen(false);
     } catch (error) {
       enqueueSnackbar(
         error.response?.data?.message ||
           "Failed to create product. Please try again.",
-        { variant: "error" },
+        {
+          variant: "error",
+        },
       );
     }
   };
 
-  // NOTE: this only clears the local selection — it doesn't call a delete
-  // API yet. Wire this to your product.service.js delete endpoint once it
-  // exists, e.g.:
-  //   await deleteProducts(selectedIds);
-  //   await loadProducts();
-  const deleteSelected = () => setSelectedIds([]);
+  // Open update modal
+  const handleOpenUpdateProduct = (product) => {
+    setSelectedProduct(product);
+    setIsUpdateModalOpen(true);
+  };
+
+  // Update product
+  const handleUpdateProduct = async (values) => {
+    if (!selectedProduct?._id) {
+      enqueueSnackbar("Product not found.", {
+        variant: "error",
+      });
+
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+
+      const response = await updateProduct(selectedProduct._id, values);
+
+      enqueueSnackbar(response.message || "Product updated successfully!", {
+        variant: "success",
+      });
+
+      await loadProducts();
+
+      setIsUpdateModalOpen(false);
+      setSelectedProduct(null);
+    } catch (error) {
+      enqueueSnackbar(
+        error.response?.data?.message ||
+          "Failed to update product. Please try again.",
+        {
+          variant: "error",
+        },
+      );
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteSelected = () => {
+    setSelectedIds([]);
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 pb-10">
@@ -235,6 +296,7 @@ export default function ProductsPage() {
               selectedIds={selectedIds}
               onToggleRow={toggleRow}
               onToggleAll={toggleAll}
+              onEdit={handleOpenUpdateProduct}
               isLoading={isLoading}
             />
           </div>
@@ -254,6 +316,18 @@ export default function ProductsPage() {
             onClose={() => setModalOpen(false)}
             onSubmit={handleCreateProduct}
             categories={categories}
+          />
+
+          {/* Update Product Modal */}
+          <UpdateProductModal
+            open={isUpdateModalOpen}
+            onClose={() => {
+              setIsUpdateModalOpen(false);
+              setSelectedProduct(null);
+            }}
+            product={selectedProduct}
+            categories={categories}
+            onSubmit={handleUpdateProduct}
           />
         </div>
       </div>

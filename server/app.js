@@ -8,6 +8,7 @@ import productRoutes from "./routes/product.routes.js";
 import inventoryRoutes from "./routes/inventory.routes.js";
 import organizationRoutes from "./routes/organization.routes.js";
 import memberRoutes from "./routes/member.routes.js";
+import { getMe } from "./controllers/auth.controller.js";
 
 const app = express();
 
@@ -37,5 +38,6 @@ app.use("/api/products", productRoutes);
 app.use("/api/products/inventory", inventoryRoutes);
 app.use("/api/organizations", organizationRoutes);
 app.use("/api/organizations", memberRoutes);
+app.use("/api/auth/me", getMe);
 
 export default app;

@@ -11,12 +11,8 @@ import {
   findMembersByOrganization,
   deleteMembersByOrganization,
 } from "../repositories/member.repository.js";
+import Organization from "../models/organization.model.js";
 
-// ========================================
-// Create Organization
-// ========================================
-
-// Only Owner creates an organization.
 export const createOrganizationService = async ({ name, code, userId }) => {
   const normalizedName = name.trim();
 
@@ -46,10 +42,6 @@ export const createOrganizationService = async ({ name, code, userId }) => {
   });
 };
 
-// ========================================
-// Get Organization
-// ========================================
-
 export const getOrganizationByIdService = async ({
   organizationId,
   userId,
@@ -68,11 +60,6 @@ export const getOrganizationByIdService = async ({
   throw new Error("You are not authorized to access this organization");
 };
 
-// ========================================
-// Update Organization
-// ========================================
-
-// Only Owner can update organization.
 export const updateOrganizationService = async ({
   organizationId,
   userId,
@@ -104,11 +91,6 @@ export const updateOrganizationService = async ({
   });
 };
 
-// ========================================
-// Delete Organization
-// ========================================
-
-// Only Owner can delete organization.
 export const deleteOrganizationService = async ({ organizationId, userId }) => {
   const organization = await findOrganizationById(organizationId);
 
@@ -128,10 +110,6 @@ export const deleteOrganizationService = async ({ organizationId, userId }) => {
   await deleteOrganization(organizationId);
 };
 
-// ========================================
-// Get Organization Members
-// ========================================
-
 export const getOrganizationMembersService = async ({
   organizationId,
   userId,
@@ -142,11 +120,17 @@ export const getOrganizationMembersService = async ({
     throw new Error("Organization not found");
   }
 
-  // Only Owner can currently
-  // manage/view members.
   if (organization.createdBy.toString() !== userId.toString()) {
     throw new Error("Only the organization owner can access members");
   }
 
   return await findMembersByOrganization(organizationId);
+};
+
+export const getMyOrganizationsService = async (userId) => {
+  const organizations = await Organization.find({
+    createdBy: userId,
+  }).select("_id name code");
+
+  return organizations;
 };

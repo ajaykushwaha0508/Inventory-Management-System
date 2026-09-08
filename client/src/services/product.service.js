@@ -6,8 +6,19 @@ export const createProduct = async (productData) => {
   return response.data;
 };
 
-export const fetchProducts = async () => {
-  const response = await axiosInstance.get("/products");
+export const fetchProducts = async (params = {}) => {
+  const response = await axiosInstance.get("/products", {
+    params,
+  });
+
+  return response.data;
+};
+
+export const updateProduct = async (productId, productData) => {
+  const response = await axiosInstance.put(
+    `/products/${productId}`,
+    productData,
+  );
 
   return response.data;
 };

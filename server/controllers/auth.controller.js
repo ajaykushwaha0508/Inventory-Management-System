@@ -8,18 +8,15 @@ import {
   registerUser,
   loginOwner,
   loginMember,
+  getMeService,
 } from "../services/auth.service.js";
 
 const cookieOptions = {
   httpOnly: true,
-  secure: process.env.NODE_ENV === "production",
+  secure: true,
   sameSite: "lax",
   maxAge: 24 * 60 * 60 * 1000,
 };
-
-// ========================================
-// Owner Registration
-// ========================================
 
 export const register = async (req, res) => {
   try {
@@ -98,10 +95,6 @@ export const login = async (req, res) => {
   }
 };
 
-// ========================================
-// Organization Member Login
-// ========================================
-
 export const memberLogin = async (req, res) => {
   try {
     const result = memberLoginSchema.safeParse(req.body);
@@ -139,10 +132,6 @@ export const memberLogin = async (req, res) => {
   }
 };
 
-// ========================================
-// Logout
-// ========================================
-
 export const logout = (req, res) => {
   res.clearCookie("token", cookieOptions);
 
@@ -150,4 +139,20 @@ export const logout = (req, res) => {
     success: true,
     message: "Logout successful",
   });
+};
+
+export const getMe = async (req, res) => {
+  try {
+    const user = await getMeService(req.user);
+
+    return res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };

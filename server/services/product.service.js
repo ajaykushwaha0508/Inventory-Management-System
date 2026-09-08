@@ -31,6 +31,7 @@ export const createProductService = async (productData) => {
     quantity,
     unitPrice,
     supplierName,
+    createdBy,
   } = productData;
 
   const existingSku = await findProductBySku(sku);
@@ -56,10 +57,12 @@ export const createProductService = async (productData) => {
     unitPrice,
     supplierName,
     status,
+    createdBy,
   });
 };
 
 export const getProductsService = async ({
+  userId,
   search,
   category,
   status,
@@ -68,7 +71,9 @@ export const getProductsService = async ({
   page,
   limit,
 }) => {
-  const filter = {};
+  const filter = {
+    createdBy: userId,
+  };
 
   if (search) {
     filter.$or = [
@@ -114,6 +119,7 @@ export const getProductsService = async ({
       skip,
       limit,
     }),
+
     countProducts(filter),
   ]);
 

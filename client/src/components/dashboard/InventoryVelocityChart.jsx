@@ -72,18 +72,34 @@ export default function InventoryVelocityChart({
             <YAxis hide />
             <Tooltip
               cursor={{ fill: "#f4f6fb" }}
-              contentStyle={{ borderRadius: 8, border: "1px solid #e2e8f0", fontSize: 12 }}
+              contentStyle={{
+                borderRadius: 8,
+                border: "1px solid #e2e8f0",
+                fontSize: 12,
+              }}
             />
-            <Bar dataKey="inbound" fill="#5850ec" radius={[4, 4, 0, 0]} maxBarSize={36} />
-            <Bar dataKey="outbound" fill="#c7d2fe" radius={[4, 4, 0, 0]} maxBarSize={36} />
+            <Bar
+              dataKey="inbound"
+              fill="#5850ec"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={36}
+            />
+            <Bar
+              dataKey="outbound"
+              fill="#c7d2fe"
+              radius={[4, 4, 0, 0]}
+              maxBarSize={36}
+            />
           </BarChart>
         </ResponsiveContainer>
       </div>
 
-      {/* Footer summary */}
       <div className="flex items-stretch divide-x divide-slate-100 border-t border-slate-100 mt-4 pt-4">
         <SummaryFooterItem label="Weekly Intake" value={weeklyIntake} />
-        <SummaryFooterItem label="Weekly Fulfillment" value={weeklyFulfillment} />
+        <SummaryFooterItem
+          label="Weekly Fulfillment"
+          value={weeklyFulfillment}
+        />
         <SummaryFooterItem
           label="Net Delta Buffer"
           value={netDeltaBuffer}
