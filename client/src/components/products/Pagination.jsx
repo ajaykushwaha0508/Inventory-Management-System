@@ -1,9 +1,5 @@
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-// Builds a small window of page numbers centered on the current page
-// (e.g. page 5 of 20 -> [4, 5, 6]), clamped so it never runs off either
-// end. Replaces the old hardcoded `[1, 2, 3]`, which never changed no
-// matter what page you were on or how many pages actually existed.
 function getPageWindow(page, totalPages, windowSize = 3) {
   let start = Math.max(1, page - Math.floor(windowSize / 2));
   let end = start + windowSize - 1;
@@ -30,10 +26,7 @@ export default function Pagination({
 
   const pageNumbers = getPageWindow(page, totalPages);
   const lastVisible = pageNumbers[pageNumbers.length - 1];
-  // Only show the "..." + last-page button if the window doesn't already
-  // reach the final page — previously these rendered unconditionally, so
-  // e.g. with only 2 total pages you'd see "1  2  ...  2" (page 2 twice,
-  // and a dead-end "..." with nothing between it and the button after it).
+
   const showEllipsisAndLast = lastVisible < totalPages;
 
   return (

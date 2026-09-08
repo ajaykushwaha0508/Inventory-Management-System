@@ -1,12 +1,9 @@
-import { useState } from "react";
-import { ListFilter, ChevronDown, LayoutGrid, List, Plus } from "lucide-react";
+import { ListFilter, Plus } from "lucide-react";
 
 export default function CategoriesToolbar({
   onSearch,
   onDepartmentChange,
   onCreateCategory,
-  view = "list",
-  onViewChange,
 }) {
   const handleDepartment = (e) => {
     setDepartment(e.target.value);

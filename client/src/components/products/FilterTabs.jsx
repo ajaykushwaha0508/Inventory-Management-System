@@ -5,12 +5,6 @@ const TAB_META = [
   { key: "out-of-stock", label: "Out of Stock", dot: "bg-red-500" },
 ];
 
-// `counts` was previously hardcoded inline (1842 / 1825 / 14 / 3) — static
-// numbers baked into this file that never reflected the real product list.
-// As soon as products were created, deleted, or filtered, these labels went
-// stale. Now the parent passes real counts (usually derived from the
-// fetched `products` array via useMemo), and this component just renders
-// them. Falls back to 0 for any tab whose count isn't provided.
 export default function FilterTabs({ active, onChange, counts = {} }) {
   return (
     <div className="inline-flex flex-wrap items-center gap-1 rounded-lg bg-slate-100 p-1">

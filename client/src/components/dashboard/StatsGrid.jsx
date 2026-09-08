@@ -50,7 +50,7 @@ export default function StatsGrid({ stats }) {
   const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
-    if (stats) return; // caller supplied their own data — skip fetching
+    if (stats) return;
     let cancelled = false;
 
     const load = async () => {

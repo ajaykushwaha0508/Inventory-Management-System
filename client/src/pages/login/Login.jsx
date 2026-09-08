@@ -15,9 +15,6 @@ import { useNavigate } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { loginMember, loginOwner } from "../../services/auth.service";
 
-// StockPulse Enterprise — Warehouse terminal login
-// Two tabs: Owner Login (email + password) / Member Login (org code + login id + password)
-
 export default function LoginPage() {
   const [activeTab, setActiveTab] = useState("owner"); // "owner" | "member"
 
