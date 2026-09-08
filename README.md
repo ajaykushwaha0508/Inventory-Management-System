@@ -379,7 +379,7 @@ Create `server/.env` from `.env.example`.
 Start the backend:
 
 ``` bash
-npm run dev
+npm start
 ```
 
 Backend:
